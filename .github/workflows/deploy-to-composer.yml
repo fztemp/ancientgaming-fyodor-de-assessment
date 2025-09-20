@@ -1,8 +1,9 @@
 name: Deploy to Composer
 on:
   push:
-    branches: [ main ]
-    paths: [ 'dags/**' ]
+    branches:
+      - main
+    paths: [ 'airflow/dags/**' ]
 
 jobs:
   deploy:
