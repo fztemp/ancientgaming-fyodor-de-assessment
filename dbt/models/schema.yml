@@ -80,7 +80,7 @@ models:
         tests:
           - not_null
 
-  - name: mart_discord_kyc_deposits_by_country
+  - name: part_2_model_2_discord_kyc_deposit_by_country
     description: "Deposit statistics by country for KYC-approved players with Discord affiliate origin"
     columns:
       - name: country_code
