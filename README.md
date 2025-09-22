@@ -1,114 +1,84 @@
 # Ancient Gaming Data Team Technical Assessment
-This repository contains a boilerplate code structure to help you with the Data Team Technical Assessment.
 
-**ATTENTION: DO NOT CLONE THIS REPOSITORY; INSTEAD FORK IT.**
+This repository contains the complete data pipeline solution for the Ancient Gaming Data Team Technical Assessment, including data generation, cleaning, and DBT analytics models.
 
-## Table of contents
-- [1. Pre-requisites](#1-pre-requisites)
-- [2. Project Structure](#2-project-structure)
-- [3. How to execute it](#3-how-to-execute-it)
-- [4. General advice](#4-general-advice)
+## Quick Start - Testing the Solution
 
-## 1. Pre-requisites
-To run this project, you'll need:
+### 1. Start the Environment
 
-1. Git installed and configured on your machine.
-2. [Docker](https://docs.docker.com/engine/install/) installed on your machine.
-3. A code editor like [VSCode](https://code.visualstudio.com/download), [Sublime Text](https://www.sublimetext.com/download) or [PyCharm](https://www.jetbrains.com/pycharm/).
-
-## 2. Project Structure
-This project structure is a suggestion. You're free to edit it to your preferences.
-
-The project's directory tree is:
-```
-├─airflow
-│ ├─dags
-│ │ └pipeline.py
-│ ├─config
-│ │ └.gitkeep
-│ ├─logs
-│ │ └.gitkeep
-│ └─plugins
-│   └.gitkeep
-├─data
-│ ├affiliates.csv
-│ ├players.csv
-│ └transactions.csv
-├─dbt
-│ ├─analyses
-│ │ └.gitkeep
-│ ├─macros
-│ │ └.gitkeep
-│ ├─models
-│ │ └─example
-│ │   ├my_first_dbt_model.sql
-│ │   ├my_second_dbt_model.sql
-│ │   └schema.yml
-│ ├─seeds
-│ │ └.gitkeep
-│ ├─snapshots
-│ │ └.gitkeep
-│ ├─tests
-│ │ └.gitkeep
-│ ├dbt_project.yml
-│ ├profiles.yml
-│ └README.md
-├.gitignore
-├docker-compose.yaml
-├Dockerfile
-├README.md
-└requirements.txt
-```
-Inside the `airflow` folder, you'll find the `dags` folder. That's where you'll need to put the DAGs.
-
-Inside the `data` folder, you'll find the CSVs provided with the sample data for the tables that need to be extended.
-
-Inside the `dbt` folder is where the DBT contents are located. This part was created by running the command `dbt init` and configuring the DB connection. You'll need to edit that part to fit the challenge requests.
-
-The Docker Compose file in this project is a light modification of the one provided by the [Apache Airflow's official documentation](https://airflow.apache.org/docs/apache-airflow/2.11.0/howto/docker-compose/index.html). It was tested and should enable an Airflow environment, a DBT CLI and a Postgres connection in a single environment, exactly what is required for this exercise.
-
-The `.gitkeep` files do nothing. They only exist because you can't commit an empty folder. If you add any file to a folder with this file, you can delete it.
-
-## 3. How to execute it
-Open your terminal at the root folder of this repository and run:
+Navigate to the repository root and start all services:
 
 ```bash
-docker-compose up airflow-init
+docker-compose up -d --build
 ```
 
-This will create the Airflow image, pull the necessary Docker images, create the database, and set up a user for the Airflow webserver.
+This will start:
+- Apache Airflow (webserver, scheduler, worker)
+- PostgreSQL database
+- Redis for task queueing
+- All necessary dependencies
 
-Then, run the command:
+### 2. Access Airflow Web Interface
 
-```bash
-docker-compose up
+Open your browser and go to: **http://localhost:8080**
+
+Login credentials:
+- **Username:** `airflow`
+- **Password:** `airflow`
+
+### 3. Run the Data Pipeline
+
+In the Airflow UI, you'll see the following DAGs:
+
+1. **`part_1_task_1_clean_data`** - Data cleaning and loading to PostgreSQL
+2. **`part_1_task_2_extend_data`** - Data generation with random timestamps
+3. **`part_2_dbt_model`** - DBT analytics models
+4. **`part_3_dbt_analytics`** - DBT execution pipeline
+5. **`part_4_complete_pipeline`** - End-to-end pipeline orchestration
+
+**To test the complete solution:**
+- The DAGs will start automatically once docker-compose finishes startup
+- If needed, you can manually trigger the `part_4_complete_pipeline` DAG for the complete end-to-end pipeline
+- Or restart individual DAGs in the Airflow UI for step-by-step testing
+
+### 4. Connect to PostgreSQL Database
+
+The results are stored in a PostgreSQL database that you can access from your local machine.
+
+**Connection Details:**
+- **Host:** `localhost`
+- **Port:** `6969`
+- **Database:** `postgres` (for DBT models) or `airflow` (for Airflow metadata)
+- **Username:** `airflow`
+- **Password:** `airflow`
+- **Schema:** `data` (where the analytics tables are created)
+
+**Example connection string:**
+```
+postgresql://airflow:airflow@localhost:6969/postgres
 ```
 
-Wait a few seconds, then go to the local webserver at http://localhost:8080/ and log in with the following credentials:
-- **username:** airflow
-- **password:** airflow
 
-If everything went ok, you should see a DAG called `pipeline`.
+### 5. Verify the Results
 
-In a separate terminal window, check if DBT is working correctly by running the following command:
+Once the pipeline completes, you can query the following tables in the `data` schema:
 
-```bash
-docker-compose exec airflow-webserver dbt build --project-dir /opt/dbt --profiles-dir /opt/dbt
-```
+**Source Tables:**
+- `data.raw_players` - Cleaned player data
+- `data.raw_affiliates` - Cleaned affiliate data  
+- `data.raw_transactions` - Cleaned transaction data
 
-If the command ran successfully, you should see a 'Completed successfully' message in green.
+**Analytics Models:**
+- `data.part_2_model_1_player_daily_transaction` - Daily player transactions with summary
+- `data.part_2_model_2_discord_kyc_deposit_by_country` - Discord KYC deposits by country
+- `data.part_2_model_3_deposit_per_player` - Top 3 deposits per player
 
-## 4. General advice
-This project structure is a suggestion. You're free to edit it to your preferences, although it's recommended that you follow it to avoid reconfiguring the Docker Compose file.
 
-When executing any DBT command, be sure to explicitly specify the Project Directory and Profiles Directory. This ensures you can execute commands from any location inside the Docker instance and will help with triggering DBT through Airflow. Both directories are located at `/opt/dbt` inside the Docker container.
+## Project Structure
 
-In summary, if you are inside a Docker container run:
-```bash
-dbt <command> --project-dir /opt/dbt --profiles-dir /opt/dbt
-```
-
-If you're not inside the container, run:
-```bash
-docker-compose exec airflow-webserver dbt <command> --project-dir /opt/dbt --profiles-dir /opt/dbt
-```
+- `airflow/dags/` - Airflow DAG definitions
+- `airflow/utils/` - Common utility functions
+- `dbt/models/` - DBT analytics models and schema definitions
+- `data/raw/` - Original sample data
+- `data/expanded/` - Generated expanded datasets
+- `data/transformed/` - Cleaned parquet files
