@@ -9,7 +9,7 @@ This repository contains the complete data pipeline solution for the Ancient Gam
 Navigate to the repository root and start all services:
 
 ```bash
-docker-compose up -d --build
+docker compose up -d --build
 ```
 
 This will start:
