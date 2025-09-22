@@ -1,16 +1,15 @@
 """Complete pipeline DAG that orchestrates data generation, modeling, and analytics."""
-
 from datetime import datetime
+
 from airflow import DAG
-from airflow.operators.trigger_dagrun import TriggerDagRunOperator
-from airflow.sensors.external_task import ExternalTaskSensor
 from airflow.models.baseoperator import chain
+from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 
 POKE_INTERVAL = 5
 
 with DAG(
     dag_id='pipeline_orchestrator',
-    start_date=datetime(2025, 9, 1),
+    start_date=datetime(2025, 9, 1),  # noqa: WPS432
     catchup=False,
     schedule_interval='@daily',
     description='Complete data pipeline from generation to analytics',
