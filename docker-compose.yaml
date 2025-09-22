@@ -65,6 +65,7 @@ x-airflow-common:
     AIRFLOW__WEBSERVER__NAVBAR_COLOR: '#1c1f22'
     AIRFLOW__WEBSERVER__NAVBAR_HOVER_COLOR: '#2c3136'
     AIRFLOW__WEBSERVER__NAVBAR_TEXT_COLOR: '#e8eef5'
+    AIRFLOW_CONN_POSTGRES_DEFAULT: postgresql://airflow:airflow@postgres:5432/postgres
     # yamllint disable rule:line-length
     # Use simple http server on scheduler for health checks
     # See https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/logging-monitoring/check-health.html#scheduler-health-check-server
@@ -78,9 +79,11 @@ x-airflow-common:
     # AIRFLOW_CONFIG: '/opt/airflow/config/airflow.cfg'
   volumes:
     - ./airflow/dags:/opt/airflow/dags
+    - ./airflow/utils:/opt/airflow/utils
     - ./airflow/logs:/opt/airflow/logs
     - ./airflow/config:/opt/airflow/config
     - ./airflow/plugins:/opt/airflow/plugins
+    - ./files_tmp:/opt/airflow/files_tmp
     - ./data:/opt/data
     - ./dbt:/opt/dbt
   user: "${AIRFLOW_UID:-50000}:0"
@@ -106,6 +109,8 @@ services:
       retries: 5
       start_period: 5s
     restart: always
+    ports:
+      - "6969:5432"
 
   redis:
     # Redis is limited to 7.2-bookworm due to licencing change

@@ -13,4 +13,7 @@ USER airflow
 ENV PIP_USER=false
 COPY requirements.txt ./requirements.txt
 RUN pip install --no-cache-dir -r ./requirements.txt
+COPY .flake8 ./.flake8
 ENV PIP_USER=true
+
+ENV PYTHONPATH="${PYTHONPATH}:/opt/airflow"
