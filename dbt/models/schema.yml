@@ -100,7 +100,7 @@ models:
         tests:
           - not_null
 
-  - name: mart_top_3_deposits_per_player
+  - name: part_2_model_3_deposit_per_player
     description: "Top 3 largest deposits per player"
     columns:
       - name: player_id
