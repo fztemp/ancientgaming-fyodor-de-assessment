@@ -433,4 +433,10 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+files_tmp/
+airflow/logs/
+data/transformed
+data/expanded
+dbt/.user.yml
+
 # End of https://www.toptal.com/developers/gitignore/api/python,windows,linux,macos,virtualenv,pycharm,visualstudiocode,sublimetext,notepadpp
