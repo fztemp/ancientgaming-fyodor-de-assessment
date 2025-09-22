@@ -190,7 +190,7 @@ def generate_players_increment() -> str:
 
     start_id = _next_identifier(base_players, 'id')
 
-    qty_to_create = 1000 - len(base_players)
+    qty_to_create = 1000 - len(base_players['id'].unique())
     if qty_to_create > 0:
         increment_df = pd.DataFrame(
             _generate_player_rows(
@@ -338,7 +338,7 @@ def generate_affiliates_increment(player_path: Path) -> Path:
     )
     start_id = _next_identifier(affiliates_df, 'id')
 
-    qty_to_create = 1000 - len(affiliates_df)
+    qty_to_create = 1000 - len(affiliates_df['id'].unique())
     if qty_to_create > 0:
         increment_df = pd.DataFrame(
             _generate_affiliates_rows(
@@ -444,7 +444,7 @@ def generate_transactions_increment(players_path: str) -> str:
     kyc_approved_players_data = kyc_approved_df[['id', 'created_at']].to_dict('records')
     start_id = _next_identifier(base_transactions, 'id')
 
-    qty_to_create = 1000 - len(base_transactions)
+    qty_to_create = 1000 - len(base_transactions['id'].unique())
     if qty_to_create > 0 and kyc_approved_players_data:
         increment_df = pd.DataFrame(
             _generate_transaction_rows(
