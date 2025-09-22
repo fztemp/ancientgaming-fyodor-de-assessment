@@ -58,7 +58,7 @@ sources:
             description: "Transaction amount"
 
 models:
-  - name: mart_daily_player_transactions
+  - name: part_2_model_1_player_daily_transaction
     description: "Daily aggregated deposits and withdrawals per player"
     columns:
       - name: player_id
@@ -73,6 +73,8 @@ models:
         description: "Total deposits for the day"
       - name: withdrawals
         description: "Total withdrawals for the day (negative values)"
+      - name: summary
+        description: "Net transaction amount (deposits + withdrawals)"
       - name: updated_datetime
         description: "Timestamp when the record was created/updated"
         tests:

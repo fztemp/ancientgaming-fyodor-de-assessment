@@ -16,6 +16,7 @@ SELECT
     , transaction_date
     , deposits
     , withdrawals
+    , deposits + withdrawals                                AS summary
     , CURRENT_TIMESTAMP                                     AS updated_datetime
 FROM daily_transactions
 ORDER BY player_id, transaction_date
