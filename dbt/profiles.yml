@@ -1,11 +1,11 @@
 technical_assessment:
   outputs:
     dev:
-      dbname: airflow
+      dbname: postgres
       host: postgres
       pass: airflow
       port: 5432
-      schema: public
+      schema: data
       threads: 1
       type: postgres
       user: airflow

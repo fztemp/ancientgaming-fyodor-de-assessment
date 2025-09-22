@@ -1,0 +1,124 @@
+version: 2
+
+sources:
+  - name: data
+    schema: data
+    tables:
+      - name: raw_players
+        description: "Raw players data from expanded dataset"
+        columns:
+          - name: id
+            description: "Player ID"
+            tests:
+              - unique
+              - not_null
+          - name: affiliate_id
+            description: "Associated affiliate ID"
+          - name: country_code
+            description: "Player country code"
+          - name: is_kyc_approved
+            description: "KYC approval status"
+          - name: created_at
+            description: "Player creation timestamp"
+          - name: updated_at
+            description: "Last update timestamp"
+
+      - name: raw_affiliates
+        description: "Raw affiliates data from expanded dataset"
+        columns:
+          - name: id
+            description: "Affiliate ID"
+            tests:
+              - unique
+              - not_null
+          - name: code
+            description: "Affiliate code"
+          - name: origin
+            description: "Affiliate origin channel"
+          - name: redeemed_at
+            description: "Redemption timestamp"
+
+      - name: raw_transactions
+        description: "Raw transactions data from expanded dataset"
+        columns:
+          - name: id
+            description: "Transaction ID"
+            tests:
+              - unique
+              - not_null
+          - name: timestamp
+            description: "Transaction timestamp"
+          - name: player_id
+            description: "Player ID for transaction"
+            tests:
+              - not_null
+          - name: type
+            description: "Transaction type (Deposit, Withdraw, Bonus)"
+          - name: amount
+            description: "Transaction amount"
+
+models:
+  - name: mart_daily_player_transactions
+    description: "Daily aggregated deposits and withdrawals per player"
+    columns:
+      - name: player_id
+        description: "Player ID"
+        tests:
+          - not_null
+      - name: transaction_date
+        description: "Date of transactions"
+        tests:
+          - not_null
+      - name: deposits
+        description: "Total deposits for the day"
+      - name: withdrawals
+        description: "Total withdrawals for the day (negative values)"
+      - name: updated_datetime
+        description: "Timestamp when the record was created/updated"
+        tests:
+          - not_null
+
+  - name: mart_discord_kyc_deposits_by_country
+    description: "Deposit statistics by country for KYC-approved players with Discord affiliate origin"
+    columns:
+      - name: country_code
+        description: "Player country code"
+        tests:
+          - not_null
+      - name: deposit_count
+        description: "Number of deposits"
+        tests:
+          - not_null
+      - name: total_deposits
+        description: "Sum of all deposits"
+        tests:
+          - not_null
+      - name: updated_datetime
+        description: "Timestamp when the record was created/updated"
+        tests:
+          - not_null
+
+  - name: mart_top_3_deposits_per_player
+    description: "Top 3 largest deposits per player"
+    columns:
+      - name: player_id
+        description: "Player ID"
+        tests:
+          - unique
+          - not_null
+      - name: first_largest_deposit
+        description: "Largest deposit amount"
+      - name: first_largest_deposit_date
+        description: "Date of largest deposit"
+      - name: second_largest_deposit
+        description: "Second largest deposit amount"
+      - name: second_largest_deposit_date
+        description: "Date of second largest deposit"
+      - name: third_largest_deposit
+        description: "Third largest deposit amount"
+      - name: third_largest_deposit_date
+        description: "Date of third largest deposit"
+      - name: updated_datetime
+        description: "Timestamp when the record was created/updated"
+        tests:
+          - not_null
