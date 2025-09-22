@@ -243,6 +243,7 @@ with DAG(
     start_date=datetime(2025, 9, 1),  # noqa: WPS432
     catchup=False,
     schedule_interval=None,
+    is_paused_upon_creation=False,
 ) as dag:
     players_task = prepare_players_dataset()
     affiliates_task = prepare_affiliates_dataset(players_task)

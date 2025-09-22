@@ -311,6 +311,7 @@ with DAG(
     start_date=datetime(2025, 9, 1),  # noqa: WPS432
     catchup=False,
     schedule_interval=None,
+    is_paused_upon_creation=False,
 ) as dag:
     generate_players_task = generate_players_increment()
     generate_affiliates_task = generate_affiliates_increment(generate_players_task)
