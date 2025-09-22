@@ -28,14 +28,54 @@ SCHEMA_NAME = 'data'
 
 
 def _expanded_path(filename: str) -> Path:
+    """Get the path to a file in the expanded data directory.
+
+    Parameters
+    ----------
+    filename : str
+        Name of the file in the expanded directory.
+
+    Returns
+    -------
+    Path
+        Full path to the file in the expanded data directory.
+    """
     return data_root() / 'expanded' / filename
 
 
 def _transformed_path(filename: str) -> Path:
+    """Get the path to a file in the transformed data directory.
+
+    Parameters
+    ----------
+    filename : str
+        Name of the file in the transformed directory.
+
+    Returns
+    -------
+    Path
+        Full path to the file in the transformed data directory.
+    """
     return data_root() / 'transformed' / filename
 
 
 def _deduplicate(frame: pd.DataFrame, subset: str, sort_by: str) -> pd.DataFrame:
+    """Remove duplicate rows from DataFrame, keeping the last occurrence after sorting.
+
+    Parameters
+    ----------
+    frame : pd.DataFrame
+        DataFrame to deduplicate.
+    subset : str
+        Column name to identify duplicates by.
+    sort_by : str
+        Column name to sort by before deduplication.
+
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame with duplicates removed, keeping the latest entry for each subset value.
+    """
     frame = frame.sort_values(by=sort_by)
     return frame.drop_duplicates(subset=subset, keep='last')
 
